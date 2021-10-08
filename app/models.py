@@ -64,6 +64,8 @@ class BookWord(db.Model):
 class Translation(db.Model):
     """
         Объект является одним из вариантов перевода объекта "Word"
+        translate: перевод слова
+        word_id: id слова которое переводят
     """
     id = db.Column(db.Integer, primary_key=True) # noqa
     translate = db.Column(db.String(120), index=True)
