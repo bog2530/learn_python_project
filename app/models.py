@@ -32,11 +32,13 @@ class Book(db.Model):
     id = db.Column(db.Integer, primary_key=True) # noqa
     title = db.Column(db.String(60), index=True, unique=True)
     input_book_path = db.Column(db.String(120), unique=True)
-    text = db.Column(db.String(2000))  # Вот тут не знаю сколько символов??
+    text = db.Column(db.Text())  # Вот тут не знаю сколько символов??
     date_created = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     # Отношения
     user = db.relationship('User', backref='books', lazy='dynamic')
+    words = db.relationship(
+        'Word', secondary=BookWord(), lazy='subquery', backref=db.backref('words', lazy=True))
 
     def __repr__(self) -> None:
         return f'<Book id: {self.id} title: {self.title}>'
