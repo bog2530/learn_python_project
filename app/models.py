@@ -19,6 +19,16 @@ class User(db.Model):
         return '<User {}>'.format(self.username)
 
 
+class BookWord(db.Model):
+    """
+        many to many Book and Word
+    """
+    id = db.Column(db.Integer, primary_key=True) # noqa
+    book_id = db.Column(db.Integer, db.ForeignKey('book.id'))
+    word_id = db.Column(db.Integer, db.ForeignKey('word.id'))
+    # не знаю как тут в модели прописать backref для связующихся объектов
+
+
 class Book(db.Model):
     """
         Книга распарсенный объект формата PDF
@@ -38,7 +48,7 @@ class Book(db.Model):
     # Отношения
     user = db.relationship('User', backref='books', lazy='dynamic')
     words = db.relationship(
-        'Word', secondary=BookWord(), lazy='subquery', backref=db.backref('words', lazy=True))
+        'Word', secondary=BookWord, lazy='subquery', backref=db.backref('words', lazy=True))
 
     def __repr__(self) -> None:
         return f'<Book id: {self.id} title: {self.title}>'
@@ -51,16 +61,6 @@ class Word(db.Model):
     """
     id = db.Column(db.Integer, primary_key=True) # noqa
     base_text = db.Column(db.String(120), index=True)
-
-
-class BookWord(db.Model):
-    """
-        many to many Book and Word
-    """
-    id = db.Column(db.Integer, primary_key=True) # noqa
-    book_id = db.Column(db.Integer, db.ForeignKey('book.id'))
-    word_id = db.Column(db.Integer, db.ForeignKey('word.id'))
-    # не знаю как тут в модели прописать backref для связующихся объектов
 
 
 class Translation(db.Model):
