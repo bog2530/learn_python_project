@@ -36,7 +36,6 @@ class BookWord(db.Model):
     id = db.Column(db.Integer, primary_key=True) # noqa
     book_id = db.Column(db.Integer, db.ForeignKey('book.id'))
     word_id = db.Column(db.Integer, db.ForeignKey('word.id'))
-    # не знаю как тут в модели прописать backref для связующихся объектов
 
 
 class Book(db.Model):
@@ -50,7 +49,7 @@ class Book(db.Model):
     id = db.Column(db.Integer, primary_key=True) # noqa
     title = db.Column(db.String(60), index=True, unique=True)
     input_book_path = db.Column(db.String(120), unique=True)
-    text = db.Column(db.Text())  # Вот тут не знаю сколько символов??
+    text = db.Column(db.Text())
     date_created = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     # Отношения
