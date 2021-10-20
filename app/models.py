@@ -31,11 +31,16 @@ def load_user(id) -> None: # noqa
     return User.query.get(int(id))
 
 
-class BookWord(db.Model):
-    """many to many Book and Word"""
-    id = db.Column(db.Integer, primary_key=True) # noqa
-    book_id = db.Column(db.Integer, db.ForeignKey('book.id'))
-    word_id = db.Column(db.Integer, db.ForeignKey('word.id'))
+book_word = db.Table('book_word',
+                     db.Column('book_id', db.Integer, db.ForeignKey('book.id')),
+                     db.Column('word_id', db.Integer, db.ForeignKey('word.id')),
+                     )
+
+
+dictionary_word = db.Table('dictionary_word',
+                           db.Column('word_id', db.Integer, db.ForeignKey('dictionary.id')),
+                           db.Column('dictionary_id', db.Integer, db.ForeignKey('word.id')),
+                           )
 
 
 class Book(db.Model):
@@ -53,9 +58,9 @@ class Book(db.Model):
     date_created = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     # Отношения
-    user = db.relationship('User', backref='books', lazy='dynamic')
+    user = db.relationship('User', backref='books')
     words = db.relationship(
-        'Word', secondary=BookWord, lazy='subquery', backref=db.backref('words', lazy=True))
+        'Word', secondary=book_word, lazy='subquery', backref=db.backref('b_words', lazy=True))
 
     def __repr__(self) -> None:
         return f'<Book id: {self.id} title: {self.title}>'
@@ -76,14 +81,7 @@ class Translation(db.Model):
     translate = db.Column(db.String(120), index=True)
     word_id = db.Column(db.Integer, db.ForeignKey('word.id'))
     # Отношения
-    word = db.relationship('Word', backref='translations', lazy='dynamic')
-
-
-class DictionaryWord(db.Model):
-    """Модель словарь слов. """
-    id = db.Column(db.Integer, primary_key=True) # noqa
-    word_id = db.Column(db.Integer, db.ForeignKey('dictionary.id'))
-    dictionary_id = db.Column(db.Integer, db.ForeignKey('word.id'))
+    word = db.relationship('Word', backref='translations')
 
 
 class Dictionary(db.Model):
@@ -91,9 +89,9 @@ class Dictionary(db.Model):
     id = db.Column(db.Integer, primary_key=True) # noqa
     name = db.Column(db.String(120))  # не знаю сколько символов
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    user = db.relationship('User', backref='dictionaries', lazy='dynamic')
+    user = db.relationship('User', backref='dictionaries')
     words = db.relationship(
-        'Word', secondary=DictionaryWord, lazy='subquery', backref=db.backref('words', lazy=True))
+        'Word', secondary=dictionary_word, lazy='subquery', backref=db.backref('d_words', lazy=True))
 
     def __repr__(self) -> None:
         return f'<Dictionary: {self.id} name: {self.name}>'
@@ -110,7 +108,7 @@ class Sentence(db.Model):
     base_text = db.Column(db.Text())
     translate_text = db.Column(db.Text())
     book = db.relationship(
-        'Book', backref='sentences', lazy='dynamic')
+        'Book', backref='sentences')
 
     def __repr__(self) -> None:
-        return f'<Sentence: {self.id} text: {self.name}, translate: {self.translate_text}>'
+        return f'<Sentence: {self.id} text: {self.base_text}, translate: {self.translate_text}>'
