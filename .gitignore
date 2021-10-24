@@ -134,3 +134,5 @@ dmypy.json
 .vscode
 app.db
 books/
+key.py
+*.pdf
