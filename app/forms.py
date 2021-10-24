@@ -1,7 +1,8 @@
 """Основной модуль форм."""
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileField
 
-from wtforms import PasswordField, StringField, SubmitField
+from wtforms import BooleanField, PasswordField, StringField, SubmitField
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
 
 from app.models import User # noqa
@@ -25,3 +26,15 @@ class RegistrationForm(FlaskForm):
         user = User.query.filter_by(email=email.data).first()
         if user is not None:
             raise ValidationError('Please use a different email address.')
+
+
+class LoginForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    remember_me = BooleanField('Remember Me')
+    submit = SubmitField('Log in')
+
+
+class UploadForm(FlaskForm):
+    file = FileField()
+    submit = SubmitField('Submit')
