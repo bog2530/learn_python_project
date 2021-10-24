@@ -63,8 +63,8 @@ def logout():
     return redirect(url_for('index'))
 
 
-def allowed_file(filename): return '.' in filename and \
-    filename.rsplit('.', 1)[1] in Config.ALLOWED_EXTENSIONS
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1] in Config.ALLOWED_EXTENSIONS
 
 
 @app.route('/upload', methods=['GET', 'POST'])
@@ -72,9 +72,11 @@ def allowed_file(filename): return '.' in filename and \
 def upload():
     form = UploadForm()
     if request.method == 'POST':
-        form = request.files['file']
-        if form and allowed_file(form.filename):
-            filename = secure_filename(form.filename)
-            form.save(os.path.join(Config.UPLOAD_FOLDER, filename))
-            return render_template('upload.html', form=form)
+        file_pdf = request.files['file']
+        if file_pdf and allowed_file(file_pdf.filename):
+            filename = secure_filename(file_pdf.filename)
+            file_pdf.save(os.path.join(Config.UPLOAD_FOLDER, filename))
+            flash('File added')
+        else:
+            flash('File is not a pdf')
     return render_template('upload.html', form=form)
