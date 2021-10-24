@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Upload pdf FileStorage application/pdf</h1>
+    <form class ="" action="{{ url_for('upload') }}" method="post", enctype="multipart/form-data">
+        {{ form.file() }}
+        {{ form.submit() }}
+    </form>
+ {% endblock %}
