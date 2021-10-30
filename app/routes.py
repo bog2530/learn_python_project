@@ -1,6 +1,7 @@
 """Основной модуль роутинга."""
 # -*- coding: utf-8 -*-
 import os
+from datetime import datetime
 
 from flask import flash, redirect, render_template, request, url_for
 
@@ -11,7 +12,9 @@ from werkzeug.utils import secure_filename
 
 from app import app, db # noqa
 from app.forms import LoginForm, RegistrationForm, UploadForm
-from app.models import User
+from app.models import Book, Sentence, Translation, User, Word
+from app.parser import open_pdf, split_into_sentences, split_into_words
+from app.translator import translate
 
 from config import Config
 
@@ -76,7 +79,29 @@ def upload():
         if file_pdf and allowed_file(file_pdf.filename):
             filename = secure_filename(file_pdf.filename)
             file_pdf.save(os.path.join(Config.UPLOAD_FOLDER, filename))
+            file_path = os.path.abspath(filename)
+            title_author = f'{form.author.data} - {form.title.data}'
+            date_created = datetime.now()
+            text = open_pdf(file_path)
             flash('File added')
+            book = Book(input_book_path=file_path, text=text, title=title_author, date_created=date_created)
+            db.session.add(book)
+            db.session.commit()
+            split_sentences = split_into_sentences(text)
+            split_words = split_into_words(text)
+            for sentence in split_sentences:
+                translation_sentence = translate(sentence)
+                sentence_db = Sentence(base_text=sentence, translate_text=translation_sentence)
+                db.session.add(sentence_db)
+                db.session.commit()
+            for word in split_words:
+                words = Word(base_text=word)
+                translation_word = translate(word)
+                translation = Translation(translate=translation_word)
+                db.session.add(words)
+                db.session.commit()
+                db.session.add(translation)
+                db.session.commit()
         else:
             flash('File is not a pdf')
     return render_template('upload.html', form=form)

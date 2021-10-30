@@ -36,5 +36,7 @@ class LoginForm(FlaskForm):
 
 
 class UploadForm(FlaskForm):
-    file = FileField()
+    file = FileField() # noqa
+    title = StringField('Title:')
+    author = StringField('Author:')
     submit = SubmitField('Submit')

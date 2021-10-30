@@ -136,3 +136,4 @@ app.db
 books/
 key.py
 *.pdf
+*.txt
