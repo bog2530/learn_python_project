@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
+import re # noqa
+
 import nltk.data
 
 import pdfplumber
-
-import re # noqa
 
 
 def split_into_sentences(text):
@@ -25,7 +25,6 @@ def open_pdf(file_path):
         pages = pdf.pages
         pdf_text = ''
         for page in pages:
-            pdf_text += (page.extract_text())
-        pdf_text = pdf_text.strip(' ')
-        pdf_text = pdf_text.strip('\n')
+            pdf_text += page.extract_text()
+        pdf_text = pdf_text.strip()
     return pdf_text

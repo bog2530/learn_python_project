@@ -137,3 +137,5 @@ books/
 key.py
 *.pdf
 *.txt
+*.sh
+test/

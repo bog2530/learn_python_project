@@ -84,22 +84,25 @@ def upload():
             date_created = datetime.now()
             text = open_pdf(file_path)
             flash('File added')
-            book = Book(input_book_path=file_path, text=text, title=title_author, date_created=date_created)
+            book = Book(
+                user_id=current_user.id, input_book_path=file_path,
+                text=text, title=title_author, date_created=date_created)
             db.session.add(book)
-            db.session.commit()
+            db.session.flush()
             split_sentences = split_into_sentences(text)
             split_words = split_into_words(text)
             for sentence in split_sentences:
                 translation_sentence = translate(sentence)
-                sentence_db = Sentence(base_text=sentence, translate_text=translation_sentence)
+                sentence_db = Sentence(base_text=sentence, translate_text=translation_sentence, book_id=book.id)
                 db.session.add(sentence_db)
-                db.session.commit()
+                db.session.flush()
             for word in split_words:
-                words = Word(base_text=word)
+                word_db = Word(base_text=word)
+                db.session.add(word_db)
+                db.session.flush()
+                word_db.b_words.append(book)
                 translation_word = translate(word)
-                translation = Translation(translate=translation_word)
-                db.session.add(words)
-                db.session.commit()
+                translation = Translation(translate=translation_word, word_id=word_db.id)
                 db.session.add(translation)
                 db.session.commit()
         else:
