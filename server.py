@@ -7,6 +7,3 @@ def make_shell_context():
     return {'db': db, 'User': User, 'Book': Book, 'BookWord': book_word,
             'Dictionary': Dictionary, 'DictionaryWord': dictionary_word, 'Sentence': Sentence,
             'Translation': Translation, 'Word': Word}
-
-
-app.run(debug=True)

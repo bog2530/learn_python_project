@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Upload book</h1>
+    <form class ="" action="{{ url_for('upload') }}" method="post", enctype="multipart/form-data">
+        {{ form.file() }}
+        <p>
+            {{ form.title.label }}<br>
+            {{ form.title(size=32) }}<br>
+        </p>
+        <p>
+            {{ form.author.label }}<br>
+            {{ form.author(size=32) }}<br>
+        </p>
+        {{ form.submit() }}
+    </form>
+ {% endblock %}
