@@ -139,3 +139,4 @@ key.py
 *.txt
 *.sh
 test/
+app.db-journal
