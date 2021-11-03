@@ -1,23 +1,19 @@
 """Основной модуль роутинга."""
 # -*- coding: utf-8 -*-
 import os
+import uuid
 from datetime import datetime
 
-import uuid # noqa
-
 from flask import flash, redirect, render_template, request, url_for
-
 from flask_login import current_user, login_required, login_user, logout_user
-
 from werkzeug.urls import url_parse
 from werkzeug.utils import secure_filename
 
-from app import app, db # noqa
+from app import app, db
 from app.forms import LoginForm, RegistrationForm, UploadForm
 from app.models import Book, Sentence, Translation, User, Word
 from app.parser import open_pdf, split_into_sentences, split_into_words
 from app.translator import translate
-
 from config import Config
 
 
