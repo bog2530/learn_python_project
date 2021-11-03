@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-import re # noqa
+import re
 
 import nltk.data
-
 import pdfplumber
 
 

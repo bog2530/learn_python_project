@@ -1,6 +1,6 @@
 import requests
 
-from app.key import headers # noqa
+from app.key import headers
 
 url = "https://microsoft-translator-text.p.rapidapi.com/translate"
 

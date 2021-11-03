@@ -1,11 +1,10 @@
 """Основной модуль форм."""
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField
-
 from wtforms import BooleanField, PasswordField, StringField, SubmitField
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
 
-from app.models import User # noqa
+from app.models import User
 
 
 class RegistrationForm(FlaskForm):
