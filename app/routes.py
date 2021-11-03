@@ -3,6 +3,8 @@
 import os
 from datetime import datetime
 
+import uuid # noqa
+
 from flask import flash, redirect, render_template, request, url_for
 
 from flask_login import current_user, login_required, login_user, logout_user
@@ -77,9 +79,9 @@ def upload():
     if request.method == 'POST':
         file_pdf = request.files['file']
         if file_pdf and allowed_file(file_pdf.filename):
-            filename = secure_filename(file_pdf.filename)
+            filename = secure_filename(f'{uuid.uuid4()}.pdf')
             file_pdf.save(os.path.join(Config.UPLOAD_FOLDER, filename))
-            file_path = os.path.abspath(filename)
+            file_path = os.path.abspath(f'books/{filename}')
             title_author = f'{form.author.data} - {form.title.data}'
             date_created = datetime.now()
             text = open_pdf(file_path)
