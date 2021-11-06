@@ -1,9 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <body class="text-center"> 
     <h1>Upload book</h1>
     <form class ="" action="{{ url_for('upload') }}" method="post", enctype="multipart/form-data">
         {{ form.file() }}
+        
         <p>
             {{ form.title.label }}<br>
             {{ form.title(size=32) }}<br>
@@ -12,6 +14,7 @@
             {{ form.author.label }}<br>
             {{ form.author(size=32) }}<br>
         </p>
-        {{ form.submit() }}
+        <button type=form.submit() class="btn btn-dark">{{ form.submit.label() }}</button>
     </form>
+    </body>
  {% endblock %}

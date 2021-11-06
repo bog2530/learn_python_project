@@ -11,7 +11,7 @@ from werkzeug.utils import secure_filename
 
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, UploadForm
-from app.models import Book, Sentence, Translation, User, Word
+from app.models import Book, Sentence, Translation, User, Word, book_word
 from app.parser import open_pdf, split_into_sentences, split_into_words
 from app.translator import translate
 from config import Config
@@ -21,8 +21,8 @@ from config import Config
 @app.route('/index')
 @login_required
 def index() -> None:
-    posts = ["Hello, World!"]
-    return render_template("index.html", title='Home Page', posts=posts)
+    book = Book.query.filter(Book.user_id == current_user.id).order_by(Book.date_created.desc()).all()
+    return render_template("index.html", title='Books Page', book=book)
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -106,3 +106,28 @@ def upload():
         else:
             flash('File is not a pdf')
     return render_template('upload.html', form=form)
+
+
+@app.route('/index/<int:id>/del')
+@login_required
+def book_delete(id):
+    book_del = Book.query.get_or_404(id)
+    # Пока не придумал как удалить все последующие записи
+    db.session.delete(book_del)
+    db.session.commit()
+    return('/index')
+
+
+@app.route('/sentence/<int:id>')
+@login_required
+def sentence(id):
+    sentence = Sentence.query.filter(Sentence.book_id == id).order_by(Sentence.id).all()
+    return render_template("sentence.html", title='Home Page', sentence=sentence)
+
+
+@app.route('/word/<int:id>')
+@login_required
+def word(id):
+    word = Word.query.filter(book_word.c.book_id == id).all()
+    # Незнаю как отфильтровать
+    return render_template("word.html", title='Home Page', word=word)

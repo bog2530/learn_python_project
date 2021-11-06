@@ -1,8 +1,16 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Home</h1>
-    {% for post in posts %}
-    <div><p><b>{{ post }}</b></p></div>
+    <body> 
+    <h1 class="text-center">Books</h1>
+    {% for el in book %}
+    <div class='alert alert-dark'>
+        <h6>{{ el.title }}</h6>
+
+        <p>Дата добавления: {{ el.date_created.date() }}</p>
+        <a href="/sentence/{{ el.id }}" class="btn btn-primary btn-sm active" role="button" aria-pressed="true">Sentence translate</a>
+        <a href="/word/{{ el.id }}" class="btn btn-secondary btn-sm active" role="button" aria-disabled="true">Word translate</a>
+        <a href="/index/{{ el.id }}/del" class="btn btn-secondary btn-sm active" role="button" aria-disabled="true">Delete book</a>
+    </div>
     {% endfor %}
 {% endblock %}
