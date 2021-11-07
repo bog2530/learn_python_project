@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <body> 
+        <h1 class="text-center">Sentences</h1>
+        {% for el in sentence %}
+        <div class='alert alert-dark'>
+            <h7>{{ el.base_text }}</h7>
+            <p>{{ el.translate_text }}</p>
+        </div>
+        {% endfor %}
+{% endblock %}
