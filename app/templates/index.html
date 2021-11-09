@@ -3,14 +3,14 @@
 {% block content %}
     <body> 
     <h1 class="text-center">Books</h1>
-    {% for el in book %}
+    {% for el in books %}
     <div class='alert alert-dark'>
         <h6>{{ el.title }}</h6>
 
-        <p>Дата добавления: {{ el.date_created.date() }}</p>
-        <a href="/sentence/{{ el.id }}" class="btn btn-primary btn-sm active" role="button" aria-pressed="true">Sentence translate</a>
-        <a href="/word/{{ el.id }}" class="btn btn-secondary btn-sm active" role="button" aria-disabled="true">Word translate</a>
-        <a href="/index/{{ el.id }}/del" class="btn btn-secondary btn-sm active" role="button" aria-disabled="true">Delete book</a>
+        <p>Date of addition: {{ el.date_created.date() }}</p>
+        <a href="{{ url_for('sentence', id=el.id) }}" class="btn btn-dark btn-sm active" role="button" aria-pressed="true">Sentence translate</a>
+        <a href="{{ url_for('words', id=el.id) }}" class="btn btn-dark btn-sm active" role="button" aria-disabled="true">Word translate</a>
+        <a href="{{ url_for('book_delete', id=el.id) }}" class="btn btn-warning btn-sm active" role="button" aria-disabled="true">Delete book</a>
     </div>
     {% endfor %}
 {% endblock %}

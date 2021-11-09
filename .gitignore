@@ -140,3 +140,4 @@ key.py
 *.sh
 test/
 app.db-journal
+*.rdb
