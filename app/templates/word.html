@@ -3,15 +3,14 @@
 {% block content %}
     <body> 
         <h1 class="text-center">Words</h1>
-        {% for el in words %}
-
+        {% for word in words %}
         <div class='alert-dark alert'>
-        <p>{{ el.base_text }}</p> 
-        {% endfor %}
-        {% for elem in translation %}
-        <p>{{ elem.translate }}</p>
+        <p>{{ word.base_text }}</p> 
+        {% for translation in word.translations %}
+        <p>{{ translation.translate }}</p>
         {% endfor %}
         </div>
+        {% endfor %}
         
 
 {% endblock %}

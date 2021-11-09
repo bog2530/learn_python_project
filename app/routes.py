@@ -113,7 +113,6 @@ def upload():
 def book_delete(id):
     try:
         book_del = Book.query.filter(Book.user_id == current_user.id, Book.id == id).first()
-        print(book_del)
         # Пока не придумал как удалить все последующие записи
         db.session.delete(book_del)
         db.session.commit()
@@ -135,7 +134,5 @@ def sentence(id):
 def words(id):
     words = (db.session.query(Word)
              .join(Book.words)
-             .filter(Book.id == id)
-             .filter(Word.id))
-    translation = Translation.query.filter(Translation.word).all()
-    return render_template("word.html", title='Home Page', words=words, translation=translation)
+             .filter(Book.id == id, Book.user_id == current_user.id))
+    return render_template("word.html", title='Home Page', words=words)
