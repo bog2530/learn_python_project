@@ -113,7 +113,6 @@ def upload():
 def book_delete(id):
     try:
         book_del = Book.query.filter(Book.user_id == current_user.id, Book.id == id).first()
-        # Пока не придумал как удалить все последующие записи
         db.session.delete(book_del)
         db.session.commit()
         flash(f'File deleted: {book_del.title}')
@@ -125,7 +124,7 @@ def book_delete(id):
 @app.route('/books/<int:id>/sentences/')
 @login_required
 def sentence(id):
-    sentence = Sentence.query.filter(Sentence.book_id == id).order_by(Sentence.id).all()
+    sentence = (db.session.query(Sentence).join(Book).filter(Book.id == id, Book.user_id == current_user.id))
     return render_template("sentence.html", title='Home Page', sentence=sentence)
 
 

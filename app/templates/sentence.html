@@ -4,9 +4,12 @@
     <body> 
         <h1 class="text-center">Sentences</h1>
         {% for el in sentence %}
-        <div class='alert alert-dark'>
-            <h7>{{ el.base_text }}</h7>
-            <p>{{ el.translate_text }}</p>
-        </div>
-        {% endfor %}
+        <div class="container-sm card border-dark mb-1" style="max-width: 80rem;">
+            <div class="card-body">
+              <h4 class="card-title">{{ el.base_text }}</h4>
+              <p class="card-text">{{ el.translate_text }}</p>
+            </div>
+          </div>
+          {% endfor %}
+        
 {% endblock %}

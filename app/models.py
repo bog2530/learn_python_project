@@ -51,7 +51,7 @@ class Book(db.Model):
         date_created: дата загрузки книги
         user_id: id пользователя загрузившего книгу"""
     id = db.Column(db.Integer, primary_key=True) # noqa
-    title = db.Column(db.String(60), index=True, unique=True)
+    title = db.Column(db.String(60), index=True, unique=False)
     input_book_path = db.Column(db.String(120), unique=True)
     text = db.Column(db.Text())
     date_created = db.Column(db.DateTime, index=True, default=datetime.utcnow)
@@ -59,7 +59,7 @@ class Book(db.Model):
     # Отношения
     user = db.relationship('User', backref='books')
     words = db.relationship(
-        'Word', secondary=book_word, lazy='subquery', backref=db.backref('b_words', lazy=True))
+        'Word', secondary=book_word, cascade="all,delete", lazy='subquery', backref=db.backref('b_words', lazy=True))
 
     def __repr__(self) -> None:
         return f'<Book id: {self.id} title: {self.title}>'
@@ -80,13 +80,13 @@ class Translation(db.Model):
     translate = db.Column(db.String(120), index=True)
     word_id = db.Column(db.Integer, db.ForeignKey('word.id'))
     # Отношения
-    word = db.relationship('Word', backref='translations')
+    word = db.relationship('Word', backref=db.backref('translations', cascade="all,delete"))
 
 
 class Dictionary(db.Model):
     """Модель словарь."""
     id = db.Column(db.Integer, primary_key=True) # noqa
-    name = db.Column(db.String(120))  # не знаю сколько символов
+    name = db.Column(db.String(120))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     user = db.relationship('User', backref='dictionaries')
     words = db.relationship(
@@ -107,7 +107,7 @@ class Sentence(db.Model):
     base_text = db.Column(db.Text())
     translate_text = db.Column(db.Text())
     book = db.relationship(
-        'Book', backref='sentences')
+        'Book', cascade="all,delete", backref=db.backref('sentences', cascade="all,delete"))
 
     def __repr__(self) -> None:
         return f'<Sentence: {self.id} text: {self.base_text}, translate: {self.translate_text}>'
