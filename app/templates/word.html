@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <body> 
+        <h1 class="text-center">Words</h1>
+        {% for word in words %}
+        <div class="container-sm text-center card border-dark mb-1" style="max-width: 40rem;">
+            <div class="text-center card-body">
+              <h4 class="card-title text-center">{{ word.base_text }}</h4>
+              {% for translation in word.translations %}
+              <p class="card-text text-center">{{ translation.translate }}</p>
+              {% endfor %}
+            </div>
+          </div>
+          {% endfor %}
+
+{% endblock %}

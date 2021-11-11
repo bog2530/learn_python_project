@@ -1,8 +1,18 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Home</h1>
-    {% for post in posts %}
-    <div><p><b>{{ post }}</b></p></div>
+    <body> 
+    <h1 class="text-center">Books</h1>
+    {% for el in books %}
+    <div class="container-sm card border-dark mb-1" style="max-width: 80rem;">
+        <div class="card-body">
+            <h6>{{ el.title }}</h6>
+            <p>Date of addition: {{ el.date_created.date() }}</p>
+            <a href="{{ url_for('sentence', id=el.id) }}" class="btn btn-dark btn-sm active" role="button" aria-pressed="true">Sentence translate</a>
+            <a href="{{ url_for('words', id=el.id) }}" class="btn btn-dark btn-sm active" role="button" aria-disabled="true">Word translate</a>
+            <a href="{{ url_for('book_delete', id=el.id) }}" class="btn btn-warning btn-sm active" role="button" aria-disabled="true">Delete book</a>
+        </div>
+    </div>
     {% endfor %}
 {% endblock %}
+

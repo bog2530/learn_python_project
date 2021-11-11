@@ -18,11 +18,11 @@ from config import Config
 
 
 @app.route('/')
-@app.route('/index')
+@app.route('/books')
 @login_required
-def index() -> None:
-    posts = ["Hello, World!"]
-    return render_template("index.html", title='Home Page', posts=posts)
+def books() -> None:
+    books = Book.query.filter(Book.user_id == current_user.id).order_by(Book.date_created.desc()).all()
+    return render_template("index.html", title='Books Page', books=books)
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -43,7 +43,7 @@ def register() -> None:
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('index'))
+        return redirect(url_for('books'))
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
@@ -53,7 +53,7 @@ def login():
         login_user(user, remember=form.remember_me.data)
         next_page = request.args.get('next')
         if not next_page or url_parse(next_page).netloc != '':
-            next_page = url_for('index')
+            next_page = url_for('books')
         return redirect(next_page)
     return render_template('login.html', title='Sign In', form=form)
 
@@ -61,7 +61,7 @@ def login():
 @app.route('/logout')
 def logout():
     logout_user()
-    return redirect(url_for('index'))
+    return redirect(url_for('books'))
 
 
 def allowed_file(filename):
@@ -106,3 +106,32 @@ def upload():
         else:
             flash('File is not a pdf')
     return render_template('upload.html', form=form)
+
+
+@app.route('/books/<int:id>/del')
+@login_required
+def book_delete(id):
+    try:
+        book_del = Book.query.filter(Book.user_id == current_user.id, Book.id == id).first()
+        db.session.delete(book_del)
+        db.session.commit()
+        flash(f'File deleted: {book_del.title}')
+    except Exception:
+        flash('File cannot be deleted')
+    return redirect(url_for('books'))
+
+
+@app.route('/books/<int:id>/sentences/')
+@login_required
+def sentence(id):
+    sentence = (db.session.query(Sentence).join(Book).filter(Book.id == id, Book.user_id == current_user.id))
+    return render_template("sentence.html", title='Home Page', sentence=sentence)
+
+
+@app.route('/books/<int:id>/words')
+@login_required
+def words(id):
+    words = (db.session.query(Word)
+             .join(Book.words)
+             .filter(Book.id == id, Book.user_id == current_user.id))
+    return render_template("word.html", title='Home Page', words=words)
