@@ -3,15 +3,29 @@
 {% block content %}
     <body> 
         <h1 class="text-center">Words</h1>
-        {% for word in words %}
+        {% for word in words.items %}
         <div class="container-sm text-center card border-dark mb-1" style="max-width: 40rem;">
             <div class="text-center card-body">
-              <h4 class="card-title text-center">{{ word.base_text }}</h4>
+              <h6 class="card-title text-center">{{ word.base_text }}</h6>
               {% for translation in word.translations %}
               <p class="card-text text-center">{{ translation.translate }}</p>
               {% endfor %}
             </div>
           </div>
           {% endfor %}
-
+          <div class="text-center">
+            {% for page_num in words.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+              {% if page_num %}
+                {% if words.page_num == page_num %}
+                  <a class="btn btn-dark mb-4" href="{{ url_for('words',id=id,  page=page_num) }}">{{ page_num }}</a>
+                {% else %}
+                  <a class="btn btn-outline-dark mb-4" href="{{ url_for('words',id=id, page=page_num) }}">{{ page_num }}</a>
+                {% endif %}
+              {% else %}
+                ...
+              {% endif %}
+            {% endfor %}
+            </div>
+            </body>
 {% endblock %}
+
