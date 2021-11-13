@@ -17,3 +17,4 @@ class Config(object):
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'python_learn'
     UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'books')
     ALLOWED_EXTENSIONS = {'pdf'}
+    POSTS_PER_PAGE = 15

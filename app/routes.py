@@ -21,8 +21,10 @@ from config import Config
 @app.route('/books')
 @login_required
 def books() -> None:
-    books = Book.query.filter(Book.user_id == current_user.id).order_by(Book.date_created.desc()).all()
-    return render_template("index.html", title='Books Page', books=books)
+    page = request.args.get('page', 1, type=int)
+    books = Book.query.filter(Book.user_id == current_user.id).order_by(Book.date_created.desc()).paginate(
+        page, app.config['POSTS_PER_PAGE'])
+    return render_template("index.html", title='Books', books=books)
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -124,14 +126,16 @@ def book_delete(id):
 @app.route('/books/<int:id>/sentences/')
 @login_required
 def sentence(id):
-    sentence = (db.session.query(Sentence).join(Book).filter(Book.id == id, Book.user_id == current_user.id))
-    return render_template("sentence.html", title='Home Page', sentence=sentence)
+    page = request.args.get('page', 1, type=int)
+    sentences = Sentence.query.join(Book).filter(Book.id == id, Book.user_id == current_user.id).paginate(
+        page, app.config['POSTS_PER_PAGE'])
+    return render_template("sentence.html", title='Home Page', sentences=sentences, id=id)
 
 
 @app.route('/books/<int:id>/words')
 @login_required
 def words(id):
-    words = (db.session.query(Word)
-             .join(Book.words)
-             .filter(Book.id == id, Book.user_id == current_user.id))
-    return render_template("word.html", title='Home Page', words=words)
+    page = request.args.get('page', 1, type=int)
+    words = Word.query.join(Book.words).filter(Book.id == id, Book.user_id == current_user.id).paginate(
+        page, app.config['POSTS_PER_PAGE'])
+    return render_template("word.html", title='Home Page', words=words, id=id)
